@@ -1,4 +1,4 @@
-# Manganese-Sense 🌍
+# Manga-Sense 🌍
 
 AI-powered manganese mineral deposit detection pipeline using multi-spectral Sentinel-2 satellite imagery and machine learning.
 
