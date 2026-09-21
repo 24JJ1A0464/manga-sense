@@ -146,7 +146,7 @@ def predict_manganese(model: RandomForestClassifier,
     
     # Calculate probabilities FIRST, then enforce the 99% threshold
     probabilities = model.predict_proba(feature_matrix)[:, 1]
-    predictions = (probabilities >= 0.90).astype(int)
+    predictions = (probabilities >= 0.80).astype(int)
     
     n_detections = np.sum(predictions)
     logger.info(f"Detections: {n_detections} positive pixels out of {len(predictions)}")
