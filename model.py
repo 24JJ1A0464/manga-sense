@@ -127,54 +127,31 @@ def evaluate_model(model: RandomForestClassifier,
                    y_test: np.ndarray) -> dict:
     """
     Evaluate model performance on test data.
-    
-    Args:
-        model: Fitted RandomForestClassifier
-        X_test: Test feature matrix
-        y_test: Test labels
-        
-    Returns:
-        Dictionary with evaluation metrics
     """
-    y_pred = model.predict(X_test)
+    # Calculate probabilities FIRST, then enforce the 99% threshold
     y_prob = model.predict_proba(X_test)[:, 1]
+    y_pred = (y_prob >= 0.99).astype(int)
     
     report = classification_report(y_test, y_pred, output_dict=True)
     cm = confusion_matrix(y_test, y_pred)
     
     logger.info(f"Model Evaluation:\n{classification_report(y_test, y_pred)}")
-    
-    return {
-        'classification_report': report,
-        'confusion_matrix': cm.tolist(),
-        'feature_importances': model.feature_importances_.tolist()
-    }
-
 
 def predict_manganese(model: RandomForestClassifier, 
                       feature_matrix: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
     """
     Run inference on the feature matrix to detect manganese deposits.
-    
-    Args:
-        model: Fitted RandomForestClassifier
-        feature_matrix: Feature matrix of shape (N_pixels, 7)
-        
-    Returns:
-        Tuple of (predictions, probabilities)
-        - predictions: Binary array (1=manganese detected, 0=background)
-        - probabilities: Probability of positive class (manganese)
     """
     logger.info(f"Running inference on {feature_matrix.shape[0]} pixels...")
     
-    predictions = model.predict(feature_matrix)
+    # Calculate probabilities FIRST, then enforce the 99% threshold
     probabilities = model.predict_proba(feature_matrix)[:, 1]
+    predictions = (probabilities >= 0.90).astype(int)
     
     n_detections = np.sum(predictions)
     logger.info(f"Detections: {n_detections} positive pixels out of {len(predictions)}")
     
     return predictions, probabilities
-
 
 def save_model(model: RandomForestClassifier, filepath: str) -> None:
     """Save trained model to disk."""

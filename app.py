@@ -200,7 +200,7 @@ def main():
         help="Sentinel-2 acquisition date range"
     )
     
-    run_button = st.sidebar.button("🚀 Run Scan", type="primary", use_container_width=True)
+    run_button = st.sidebar.button("🚀 Run Scan", type="primary", width="stretch")
     
     st.sidebar.divider()
     st.sidebar.markdown("""
@@ -264,7 +264,7 @@ def main():
                 st.subheader("📊 Deposit Coordinates")
                 
                 if not df.empty:
-                    st.dataframe(df_display, use_container_width=True, height=400)
+                    st.dataframe(df_display, width="stretch", height=400)
                     
                     csv = df_display.to_csv(index=False)
                     st.download_button(
@@ -272,7 +272,7 @@ def main():
                         data=csv,
                         file_name="manganese_detections.csv",
                         mime="text/csv",
-                        use_container_width=True
+                        width="stretch"
                     )
                 else:
                     st.info("No manganese deposits detected in this area.")
@@ -332,7 +332,7 @@ def main():
         cols = st.columns(len(examples))
         for i, (name, bbox_val) in enumerate(examples.items()):
             with cols[i]:
-                if st.button(name, use_container_width=True):
+                if st.button(name, width="stretch"):
                     st.session_state.bbox_input = bbox_val
                     st.rerun()
 
